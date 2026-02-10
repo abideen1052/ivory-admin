@@ -15,8 +15,8 @@ const NotificationList = ({
       style={{ animationDelay: "0.1s" }}
     >
       <h2 className="text-xl font-bold mb-6 text-slate-800">Notifications</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+      <div className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
+        <table className="hidden sm:table w-full text-left border-collapse min-w-[600px]">
           <thead>
             <tr>
               <th className="p-4 font-semibold text-slate-500 border-b-2 border-slate-200 bg-slate-50 text-xs uppercase tracking-wider">
@@ -82,15 +82,61 @@ const NotificationList = ({
                 </td>
               </tr>
             ))}
-            {notifications.length === 0 && (
-              <tr>
-                <td colSpan={6} className="p-8 text-center text-slate-500">
-                  No notifications found.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
+
+        {/* Mobile View: Card-based layout */}
+        <div className="sm:hidden space-y-4">
+          {notifications.map((notification) => (
+            <div
+              key={notification.id}
+              className="border border-slate-200 rounded-lg p-4 space-y-3"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    #{notification.id}
+                  </span>
+                  <div className="text-sm font-bold text-slate-800 truncate max-w-[150px]">
+                    {notification.recipient}
+                  </div>
+                </div>
+                <span
+                  className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase 
+                  ${
+                    notification.status === "sent"
+                      ? "bg-emerald-100 text-emerald-700"
+                      : notification.status === "failed"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-amber-100 text-amber-700"
+                  }`}
+                >
+                  {notification.status}
+                </span>
+              </div>
+              <p className="text-sm text-slate-600 line-clamp-2">
+                {notification.message}
+              </p>
+              <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                <span className="text-[10px] text-slate-400 font-medium">
+                  {new Date(notification.timestamp).toLocaleDateString()}
+                </span>
+                <button
+                  onClick={() => onResend(notification.id)}
+                  className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors"
+                >
+                  Resend Now
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {notifications.length === 0 && (
+          <div className="p-8 text-center text-slate-500 text-sm">
+            No notifications found.
+          </div>
+        )}
       </div>
     </div>
   );

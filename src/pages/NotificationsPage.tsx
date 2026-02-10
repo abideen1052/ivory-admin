@@ -10,8 +10,9 @@ interface NotificationsPageProps {
 const NotificationsPage = ({
   initialNotifications,
 }: NotificationsPageProps) => {
-  const [notifications, setNotifications] =
-    useState<Notification[]>(initialNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>(
+    [...initialNotifications].sort((a, b) => b.id - a.id),
+  );
 
   const handleResend = (id: number) => {
     // Mock resend logic
